@@ -1,0 +1,35 @@
+numero_filas=int(input('Introduce el numero de filas de la sopa de letras:'))
+numero_columnas=int(input('Introduce el numero de columnas de la sopa de letras:'))
+matriz = []
+for i in range (numero_filas):
+    matriz.append([])
+    for j in range(numero_columnas):
+        print('introduce la letra para la posicion',i,j,': ')
+        letra=input()
+        matriz[i].append(letra)
+for i in range(numero_filas):
+    print(matriz[i])
+preguntar=True
+while preguntar==True:
+    palabra=str(input('Introduce la palabra que quieres buscar: '))
+    for i in range (numero_filas):
+        for j in range(numero_columnas):
+            if palabra[0] in matriz[i][j]:
+                criterios=[[len(matriz[0])-j, len(palabra), 0, 1, 'este'],[j+1, len(palabra), 0, -1, 'oeste'],[j+1, i+1, -1, -1, 'noroeste'],[len(palabra), i+1, -1, 0, 'norte'],[len(matriz[0])-j, i+1, -1, 1, 'noreste'],[j+1, len(matriz)-i, 1, -1, 'suroeste'],[len(palabra), len(matriz)-i, 1, 0, 'sur'],[len(matriz[0])-j, len(matriz)-i, 1, 1, 'sureste']]
+                for k in range (len(criterios)):
+                   if len(palabra) <= criterios[k][0] and len(palabra) <= criterios[k][1] and palabra[1] in matriz[i+criterios[k][2]][j+criterios[k][3]]:
+                        pos_x= j+criterios[k][3]+criterios[k][3]
+                        pos_y= i+criterios[k][2]+criterios[k][2]
+                        contador=2
+                        while len(palabra) > contador:
+                            if palabra[contador] in matriz[pos_y][pos_x]:
+                                pos_x=pos_x+criterios[k][3]
+                                pos_y=pos_y+criterios[k][2]
+                                contador=contador+1
+                            else:
+                                contador=len(palabra)
+                            if palabra[-1] in matriz[pos_y-criterios[k][2]][pos_x-criterios[k][3]]:
+                                print('palabra encontrada en fila ',i+1, ' columna ',j+1,' y sentido ',criterios[k][4])
+    respuesta=str(input('Quieres volver a buscar otra palabra(S/N): '))
+    if respuesta.upper() == 'N':
+        preguntar=False
